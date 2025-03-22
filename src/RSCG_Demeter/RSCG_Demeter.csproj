@@ -1,0 +1,99 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>12.0</LangVersion>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<IsRoslynComponent>true</IsRoslynComponent>
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+		<!--<IncludeBuildOutput>false</IncludeBuildOutput>-->
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+</PropertyGroup>
+
+	
+	<PropertyGroup>
+
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GX</CompilerGeneratedFilesOutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="RSCG_TimeBombComment" Version="2023.12.19.1802" />
+
+		<PackageReference Include="System.CodeDom" PrivateAssets="all" GeneratePathProperty="true" Version="8.0.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" />
+		<None Remove="bin\Debug\netstandard2.0\\*.dll" />
+		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+
+
+	</ItemGroup>
+	<PropertyGroup>
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+		<WarningsNotAsErrors>CS0436</WarningsNotAsErrors>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+		<None Include="../../README.md" Pack="true" PackagePath="\" />
+		<None Include="../../readme.txt">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="../../LICENSE" Pack="true" PackagePath="\" />
+	</ItemGroup>
+	<PropertyGroup>
+		<Description>Interface to null object - common</Description>
+		<Copyright>MIT</Copyright>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<CurrentDate>$([System.DateTime]::Now.ToString(yyyyMMdd))</CurrentDate>
+		<Authors>Andrei Ignat</Authors>
+		<Title>A C# source-generated class library for generating null objects from interface</Title>
+		<PackageTags>dotnet;dotnetcore;csharp;generators;sourcegen;roslyn;</PackageTags>
+		<PackageProjectUrl>https://github.com/ignatandrei/RSCG_CompositeProvider</PackageProjectUrl>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeSource>true</IncludeSource>
+		<NoWarn>NU5125;NU5039;CS0436</NoWarn>
+		<!--<Version>8.$([System.DateTime]::Now.ToString(yyyy.1MMdd.1HHss))</Version>-->
+		<!--<Version>$([System.DateTime]::Now.ToString(8.yyyy.1MMdd.1HHmm))</Version>-->
+		<Version>2025.221.439</Version>
+
+		<!--<Optimize Condition="'$(Configuration)'=='Release'">true</Optimize>-->
+		<RepositoryUrl>https://github.com/ignatandrei/RSCG_CompositeProvider</RepositoryUrl>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<RepositoryType>git</RepositoryType>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<IsPackable>true</IsPackable>
+		<!--<PackageIcon>logo.png</PackageIcon>-->
+	</PropertyGroup>
+
+
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<SourceLinkCreate>true</SourceLinkCreate>
+		<SourceLinkOriginUrl>https://github.com/ignatandrei/RSCG_CompositeProvider</SourceLinkOriginUrl>
+	</PropertyGroup>
+
+
+
+	<ItemGroup>
+		<PackageReference Include="RazorBlade" Version="0.6.0" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+		<PackageReference Include="RSCG_NameGenerator" Version="2024.11.11.1830">
+			<OutputItemType>Analyzer</OutputItemType>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+		</PackageReference>
+
+	</ItemGroup>
+
+</Project>
