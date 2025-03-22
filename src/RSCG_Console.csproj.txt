@@ -1,0 +1,16 @@
+{ 
+"DemeterLocations": [{
+    "id": 1,
+    "startLine":  5 ,         
+    "endLine":  5 ,
+    "filePath": "D:\gth\RSCG_Demeter\src\RSCG_Console\Program.cs",
+    "text": "dep.Employees.Add(new Employee())"
+},
+{
+    "id": 2,
+    "startLine":  9 ,         
+    "endLine":  9 ,
+    "filePath": "D:\gth\RSCG_Demeter\src\RSCG_Console\Program.cs",
+    "text": "    dep.EmployeeNames.Add(emp.Name)"
+},
+]}

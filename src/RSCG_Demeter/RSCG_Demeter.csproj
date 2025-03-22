@@ -56,7 +56,7 @@
 		<Authors>Andrei Ignat</Authors>
 		<Title>A C# source-generated class library for generating null objects from interface</Title>
 		<PackageTags>dotnet;dotnetcore;csharp;generators;sourcegen;roslyn;</PackageTags>
-		<PackageProjectUrl>https://github.com/ignatandrei/RSCG_CompositeProvider</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/ignatandrei/RSCG_Demeter</PackageProjectUrl>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -65,10 +65,10 @@
 		<NoWarn>NU5125;NU5039;CS0436</NoWarn>
 		<!--<Version>8.$([System.DateTime]::Now.ToString(yyyy.1MMdd.1HHss))</Version>-->
 		<!--<Version>$([System.DateTime]::Now.ToString(8.yyyy.1MMdd.1HHmm))</Version>-->
-		<Version>2025.221.439</Version>
+		<Version>2025.322.439</Version>
 
 		<!--<Optimize Condition="'$(Configuration)'=='Release'">true</Optimize>-->
-		<RepositoryUrl>https://github.com/ignatandrei/RSCG_CompositeProvider</RepositoryUrl>
+		<RepositoryUrl>https://github.com/ignatandrei/RSCG_Demeter</RepositoryUrl>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<RepositoryType>git</RepositoryType>
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
@@ -82,7 +82,7 @@
 	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
 		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 		<SourceLinkCreate>true</SourceLinkCreate>
-		<SourceLinkOriginUrl>https://github.com/ignatandrei/RSCG_CompositeProvider</SourceLinkOriginUrl>
+		<SourceLinkOriginUrl>https://github.com/ignatandrei/RSCG_Demeter</SourceLinkOriginUrl>
 	</PropertyGroup>
 
 
