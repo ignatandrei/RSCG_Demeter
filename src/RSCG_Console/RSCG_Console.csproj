@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -18,8 +18,11 @@
   <ItemGroup>
     <ProjectReference Include="..\RSCG_Demeter\RSCG_Demeter.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" /> 
   </ItemGroup>
+	<!--<ItemGroup>
+    <PackageReference Include="RSCG_Demeter" Version="2025.322.439" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>-->
 
-  <ItemGroup>
+	<ItemGroup>
     <PackageReference Include="RSCG_TimeBombComment" Version="2023.12.19.1802" />
   </ItemGroup>
 
