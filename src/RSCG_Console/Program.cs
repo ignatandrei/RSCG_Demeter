@@ -5,7 +5,10 @@ Console.WriteLine("Hello, World!");
 var dep=new Department();
 dep.Employees.Add(new Employee());
 
-foreach(var emp in dep.Employees)
+foreach (var emp in dep.Employees)
 {
     dep.EmployeeNames.Add(emp.Name);
 }
+var empAll= dep.Employees;
+var empWithA = empAll.Where(it => it.Name.StartsWith("a"));
+await Task.Run(dep.GetEmployees);

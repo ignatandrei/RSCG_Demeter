@@ -62,39 +62,63 @@ public class Demeter : IIncrementalGenerator
         if (invocations == null) return;
         var data = invocations.Select(it => it).ToArray();
         if (data.Length == 0) return;
-        string json = """
+        var dtG = Generated.RSCG_Demeter.TheAssemblyInfo.DateGeneratedUTC.ToString("yyyyMMddHHmmss");
+        var nameG = Generated.RSCG_Demeter.TheAssemblyInfo.GeneratedNameNice;
+        string maxDemeterDotsString = "Max@#$"; 
+        int maxDemeterDots = 0;
+        string json = $$"""
 { 
+"dateGenerator":"{{dtG}}",
+"nameGenerator":"{{nameG}}",
+"maxDemeterDots":"{{maxDemeterDotsString}}",
 "DemeterLocations": [
 """;
         int nr = 0;
         //var root = left.SyntaxTrees.First().GetRoot();
         foreach (var invocation in invocations)
         {
-
             if (invocation == null) continue;
             var text = invocation.ToFullString();
             if (text == null) continue;
-            var insides = ExtractAllInsideParentheses(text);
+
             bool IsProblem = false;
-            foreach (var inside in insides)
+            var exp = invocation.Expression as MemberAccessExpressionSyntax;
+            if(exp == null)
             {
-                var nrDots = inside.Count(c => c == '.');
-                if (nrDots < 2) continue;
-                IsProblem = true;
-                break;
+                continue;
             }
+            var nrDots = 0;
+            while (exp != null)
+            {
+                nrDots++;
+                exp = exp.Expression as MemberAccessExpressionSyntax;
+                
+            }
+            if (maxDemeterDots < nrDots) maxDemeterDots = nrDots;
+            IsProblem = nrDots > 1;
+            //var insides = ExtractAllInsideParentheses(text);
+            //
+            //foreach (var inside in insides)
+            //{
+            //    var nrDots = inside.Count(c => c == '.');
+            //    if (nrDots < 2) continue;
+            //    IsProblem = true;
+            //    break;
+            //}
             if (!IsProblem) continue;
             var loc = invocation.GetLocation();
             var line = loc.GetLineSpan();
             string textInvoc = (invocation?.ToFullString()) ?? "";
             textInvoc = textInvoc.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
+            textInvoc =textInvoc.Replace("\"","\\\"");
             if (writeToFile)
             {
                 nr++;
                 json += $$"""
 {
     "id": {{nr}},
-    "startLine":  {{line.StartLinePosition.Line}} ,         
+    "startLine":  {{line.StartLinePosition.Line}} , 
+    "nrDots": {{nrDots}},
     "endLine":  {{line.EndLinePosition.Line}} ,
     "filePath": "{{loc.SourceTree?.FilePath}}",
     "text": "{{textInvoc}}"
@@ -120,6 +144,7 @@ public class Demeter : IIncrementalGenerator
             {
                 filePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, filePath));
             }
+            json = json.Replace(maxDemeterDotsString, maxDemeterDots.ToString());
             File.WriteAllText(filePath, json);
 #pragma warning restore RS1035 // Do not use APIs banned for analyzers
 
