@@ -16,6 +16,6 @@ var asda = new List<int>(empAll.Select(it => it.ID).Distinct().OrderBy(it => it)
 Console.WriteLine(asda.Count);
 List<string> data = [];
 var d=AppDomain.CurrentDomain.GetAssemblies()
-    .Where(it=> data.Any(a=>!it.FullName.StartsWith(a)))
+    .Where(it=> data.Any(a=>!(it.FullName?.StartsWith(a)??false)))
     .Distinct()
     .ToArray();

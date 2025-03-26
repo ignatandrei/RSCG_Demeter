@@ -96,13 +96,15 @@ public class Demeter : IIncrementalGenerator
             while (exp != null)
             {
 
+                if (exp is InvocationExpressionSyntax i)
+                    exp = i.Expression;
+
                 if (exp is MemberAccessExpressionSyntax m)
                 {
                     exp = m.Expression;
                     nrDots++;
+                    continue;
                 }
-                else if (exp is InvocationExpressionSyntax i)
-                    exp = i.Expression;
                 else
                     break;
 
