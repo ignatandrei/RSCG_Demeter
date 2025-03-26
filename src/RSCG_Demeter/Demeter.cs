@@ -95,15 +95,18 @@ public class Demeter : IIncrementalGenerator
             var nrDots = 0;
             while (exp != null)
             {
-                
+
                 if (exp is MemberAccessExpressionSyntax m)
+                {
                     exp = m.Expression;
-                else if(exp is InvocationExpressionSyntax i)
-                    exp=i.Expression;
-                else 
+                    nrDots++;
+                }
+                else if (exp is InvocationExpressionSyntax i)
+                    exp = i.Expression;
+                else
                     break;
 
-                nrDots++;
+                
             }
             if (maxDemeterDots < nrDots) maxDemeterDots = nrDots;
             IsProblem = nrDots > 1;
@@ -147,7 +150,7 @@ public class Demeter : IIncrementalGenerator
             }
             else
             {
-                DiagnosticDescriptor dd = new("RSCG001", "Demeter violation", $"Demeter violation found in {text}", "Demeter", DiagnosticSeverity.Error, true);
+                DiagnosticDescriptor dd = new("RSCG001", "Demeter violation", $"Demeter violation {nrDots} found in {text}", "Demeter", DiagnosticSeverity.Error, true);
                 Diagnostic diagnostic = Diagnostic.Create(dd, loc);
                 spc.ReportDiagnostic(diagnostic);
             }
