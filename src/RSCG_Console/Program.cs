@@ -12,3 +12,5 @@ foreach (var emp in dep.Employees)
 var empAll= dep.Employees;
 var empWithA = empAll.Where(it => it.Name.StartsWith("a"));
 await Task.Run(dep.GetEmployees);
+var asda=new List<int>(empAll.Select(it=>it.ID).Distinct().OrderBy(it=>it));
+Console.WriteLine(asda.Count);

@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Immutable;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -74,6 +75,7 @@ public class Demeter : IIncrementalGenerator
 "DemeterLocations": [
 """;
         int nr = 0;
+        List<FileLinePositionSpan> locations = new();
         //var root = left.SyntaxTrees.First().GetRoot();
         foreach (var invocation in invocations)
         {
@@ -82,17 +84,26 @@ public class Demeter : IIncrementalGenerator
             if (text == null) continue;
 
             bool IsProblem = false;
-            var exp = invocation.Expression as MemberAccessExpressionSyntax;
+
+            SyntaxNode? exp=invocation.Expression as MemberAccessExpressionSyntax;
+            //if(exp == null) exp = invocation.Expression as InvocationExpressionSyntax;
             if(exp == null)
             {
                 continue;
             }
+
             var nrDots = 0;
             while (exp != null)
             {
-                nrDots++;
-                exp = exp.Expression as MemberAccessExpressionSyntax;
                 
+                if (exp is MemberAccessExpressionSyntax m)
+                    exp = m.Expression;
+                else if(exp is InvocationExpressionSyntax i)
+                    exp=i.Expression;
+                else 
+                    break;
+
+                nrDots++;
             }
             if (maxDemeterDots < nrDots) maxDemeterDots = nrDots;
             IsProblem = nrDots > 1;
@@ -108,7 +119,15 @@ public class Demeter : IIncrementalGenerator
             if (!IsProblem) continue;
             var loc = invocation.GetLocation();
             var line = loc.GetLineSpan();
-            string textInvoc = (invocation?.ToFullString()) ?? "";
+            if (locations.Any(it =>
+            {
+                return
+                it.StartLinePosition == line.StartLinePosition
+                &&
+                it.Path == line.Path;
+            })) continue;
+            locations.Add(line);
+                string textInvoc = (invocation?.ToFullString()) ?? "";
             textInvoc = textInvoc.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
             textInvoc =textInvoc.Replace("\"","\\\"");
             if (writeToFile)
