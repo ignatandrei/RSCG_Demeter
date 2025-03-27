@@ -65,7 +65,7 @@
 		<NoWarn>NU5125;NU5039;CS0436</NoWarn>
 		<!--<Version>8.$([System.DateTime]::Now.ToString(yyyy.1MMdd.1HHss))</Version>-->
 		<!--<Version>$([System.DateTime]::Now.ToString(8.yyyy.1MMdd.1HHmm))</Version>-->
-		<Version>2026.326.1345</Version>
+		<Version>2026.327.2212</Version>
 
 		<!--<Optimize Condition="'$(Configuration)'=='Release'">true</Optimize>-->
 		<RepositoryUrl>https://github.com/ignatandrei/RSCG_Demeter</RepositoryUrl>

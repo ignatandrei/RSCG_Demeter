@@ -79,10 +79,12 @@ public class Demeter : IIncrementalGenerator
         //var root = left.SyntaxTrees.First().GetRoot();
         foreach (var invocation in invocations)
         {
+            List<ITypeSymbol> types = new();
             if (invocation == null) continue;
             var text = invocation.ToFullString();
             if (text == null) continue;
-
+            var retType= ReturnType(left.GetSemanticModel(invocation.SyntaxTree), invocation);
+            if(retType != null) types.Add(retType);
             bool IsProblem = false;
 
             SyntaxNode? exp=invocation.Expression as MemberAccessExpressionSyntax;
@@ -97,10 +99,26 @@ public class Demeter : IIncrementalGenerator
             {
 
                 if (exp is InvocationExpressionSyntax i)
+                {
+                    retType= ReturnType(left.GetSemanticModel(i.SyntaxTree), i);
+                    if (retType != null)
+                    {
+                        if(types.Contains(retType))
+                        {
+                            //builder model
+                            nrDots--;                            
+                        }
+                        else
+                        {
+                            types.Add(retType);
+                        }
+                    }
                     exp = i.Expression;
+                }
 
                 if (exp is MemberAccessExpressionSyntax m)
                 {
+                    
                     exp = m.Expression;
                     nrDots++;
                     continue;
@@ -190,7 +208,16 @@ public class Demeter : IIncrementalGenerator
         }
         return results.ToArray();
     }
+    private ITypeSymbol? ReturnType(SemanticModel semanticModel, InvocationExpressionSyntax invocation)
+    {
+        var methodSymbol = semanticModel.GetSymbolInfo(invocation).Symbol as IMethodSymbol;
+        if (methodSymbol == null) return null;
 
+        var returnType = methodSymbol.ReturnType;
+        //var receiverType = methodSymbol.ReceiverType;
+
+        return returnType;
+    }
     private InvocationExpressionSyntax? GetDataForGeneration(GeneratorSyntaxContext ctx)
     {
         var node =ctx.Node as InvocationExpressionSyntax;
