@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 
 namespace RSCG_Demeter;
 
-internal class RootData
+public class RootData
 {
     public RootData()
     {
@@ -33,7 +33,7 @@ internal class RootData
     }
 }
 
-internal class Demeterlocation
+public class Demeterlocation
 {
     internal Location? location;
     public void SetLocation(Location loc)

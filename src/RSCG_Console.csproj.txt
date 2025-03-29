@@ -1,0 +1,48 @@
+{
+  "dateGenerator": "20250329081331",
+  "nameGenerator": "Patrick Modiano is feeling hanging in T\u00F3rshavn",
+  "maxDemeterDots": 3,
+  "locationsFound": 5,
+  "DemeterLocations": [
+    {
+      "id": 1,
+      "startLine": 5,
+      "nrDots": 2,
+      "endLine": 5,
+      "filePath": "D:\\gth\\RSCG_Demeter\\src\\RSCG_Console\\Program.cs",
+      "text": "dep.Employees.Add(new Employee())"
+    },
+    {
+      "id": 2,
+      "startLine": 9,
+      "nrDots": 2,
+      "endLine": 9,
+      "filePath": "D:\\gth\\RSCG_Demeter\\src\\RSCG_Console\\Program.cs",
+      "text": "    dep.EmployeeNames.Add(emp.Name)"
+    },
+    {
+      "id": 3,
+      "startLine": 12,
+      "nrDots": 2,
+      "endLine": 12,
+      "filePath": "D:\\gth\\RSCG_Demeter\\src\\RSCG_Console\\Program.cs",
+      "text": "it.Name.StartsWith(\u0022a\u0022)"
+    },
+    {
+      "id": 4,
+      "startLine": 14,
+      "nrDots": 2,
+      "endLine": 14,
+      "filePath": "D:\\gth\\RSCG_Demeter\\src\\RSCG_Console\\Program.cs",
+      "text": "empAll.Select(it =\u003E it.ID).Distinct().OrderBy(it =\u003E it)"
+    },
+    {
+      "id": 5,
+      "startLine": 17,
+      "nrDots": 3,
+      "endLine": 20,
+      "filePath": "D:\\gth\\RSCG_Demeter\\src\\RSCG_Console\\Program.cs",
+      "text": "AppDomain.CurrentDomain.GetAssemblies()\r\n    .Where(it =\u003E data.Any(a =\u003E !(it.FullName?.StartsWith(a) ?? false)))\r\n    .Distinct()\r\n    .ToArray()"
+    }
+  ]
+}
