@@ -3,8 +3,10 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Immutable;
 using System.Linq.Expressions;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace RSCG_Demeter;
 
@@ -63,17 +65,9 @@ public class Demeter : IIncrementalGenerator
         if (invocations == null) return;
         var data = invocations.Select(it => it).ToArray();
         if (data.Length == 0) return;
-        var dtG = Generated.RSCG_Demeter.TheAssemblyInfo.DateGeneratedUTC.ToString("yyyyMMddHHmmss");
-        var nameG = Generated.RSCG_Demeter.TheAssemblyInfo.GeneratedNameNice;
-        string maxDemeterDotsString = "Max@#$"; 
         int maxDemeterDots = 0;
-        string json = $$"""
-{ 
-"dateGenerator":"{{dtG}}",
-"nameGenerator":"{{nameG}}",
-"maxDemeterDots":"{{maxDemeterDotsString}}",
-"DemeterLocations": [
-""";
+        RootData rootData = new();
+        
         int nr = 0;
         List<FileLinePositionSpan> locations = new();
         //var root = left.SyntaxTrees.First().GetRoot();
@@ -83,13 +77,13 @@ public class Demeter : IIncrementalGenerator
             if (invocation == null) continue;
             var text = invocation.ToFullString();
             if (text == null) continue;
-            var retType= ReturnType(left.GetSemanticModel(invocation.SyntaxTree), invocation);
-            if(retType != null) types.Add(retType);
+            var retType = ReturnType(left.GetSemanticModel(invocation.SyntaxTree), invocation);
+            if (retType != null) types.Add(retType);
             bool IsProblem = false;
 
-            SyntaxNode? exp=invocation.Expression as MemberAccessExpressionSyntax;
+            SyntaxNode? exp = invocation.Expression as MemberAccessExpressionSyntax;
             //if(exp == null) exp = invocation.Expression as InvocationExpressionSyntax;
-            if(exp == null)
+            if (exp == null)
             {
                 continue;
             }
@@ -100,13 +94,13 @@ public class Demeter : IIncrementalGenerator
 
                 if (exp is InvocationExpressionSyntax i)
                 {
-                    retType= ReturnType(left.GetSemanticModel(i.SyntaxTree), i);
+                    retType = ReturnType(left.GetSemanticModel(i.SyntaxTree), i);
                     if (retType != null)
                     {
-                        if(types.Contains(retType))
+                        if (types.Contains(retType))
                         {
                             //builder model
-                            nrDots--;                            
+                            nrDots--;
                         }
                         else
                         {
@@ -118,7 +112,7 @@ public class Demeter : IIncrementalGenerator
 
                 if (exp is MemberAccessExpressionSyntax m)
                 {
-                    
+
                     exp = m.Expression;
                     nrDots++;
                     continue;
@@ -126,19 +120,10 @@ public class Demeter : IIncrementalGenerator
                 else
                     break;
 
-                
+
             }
             if (maxDemeterDots < nrDots) maxDemeterDots = nrDots;
             IsProblem = nrDots > 1;
-            //var insides = ExtractAllInsideParentheses(text);
-            //
-            //foreach (var inside in insides)
-            //{
-            //    var nrDots = inside.Count(c => c == '.');
-            //    if (nrDots < 2) continue;
-            //    IsProblem = true;
-            //    break;
-            //}
             if (!IsProblem) continue;
             var loc = invocation.GetLocation();
             var line = loc.GetLineSpan();
@@ -150,35 +135,18 @@ public class Demeter : IIncrementalGenerator
                 it.Path == line.Path;
             })) continue;
             locations.Add(line);
-                string textInvoc = (invocation?.ToFullString()) ?? "";
-            textInvoc = textInvoc.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
-            textInvoc =textInvoc.Replace("\"","\\\"");
-            if (writeToFile)
+            string textInvoc = (invocation?.ToFullString()) ?? "";
+            //textInvoc = textInvoc.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
+            var demeter = new Demeterlocation
             {
-                nr++;
-                json += $$"""
-{
-    "id": {{nr}},
-    "startLine":  {{line.StartLinePosition.Line}} , 
-    "nrDots": {{nrDots}},
-    "endLine":  {{line.EndLinePosition.Line}} ,
-    "filePath": "{{loc.SourceTree?.FilePath}}",
-    "text": "{{textInvoc}}"
-},
-
-""";
-            }
-            else
-            {
-                DiagnosticDescriptor dd = new("RSCG001", "Demeter violation", $"Demeter violation {nrDots} found in {text}", "Demeter", DiagnosticSeverity.Error, true);
-                Diagnostic diagnostic = Diagnostic.Create(dd, loc);
-                spc.ReportDiagnostic(diagnostic);
-            }
-            //spc.AddSource("andrei.cs", text);
+                id = ++nr,
+                nrDots = nrDots,
+                filePath = loc.SourceTree?.FilePath ?? "",
+                text = textInvoc
+            };
+            demeter.SetLocation(loc);
+            rootData.AddDemeterLocation(demeter);
         }
-        json += """
-]}
-""";
         if (writeToFile)
         {
 #pragma warning disable RS1035 // Do not use APIs banned for analyzers
@@ -186,28 +154,26 @@ public class Demeter : IIncrementalGenerator
             {
                 filePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, filePath));
             }
-            json = json.Replace(maxDemeterDotsString, maxDemeterDots.ToString());
-            File.WriteAllText(filePath, json);
+            rootData.maxDemeterDots=maxDemeterDots;
+            JsonSerializerOptions options = new() { WriteIndented = true };
+            File.WriteAllText(filePath,JsonSerializer.Serialize(rootData,options) );
 #pragma warning restore RS1035 // Do not use APIs banned for analyzers
 
      
         }
+        else
+        {
+            foreach(var item in rootData.DemeterLocations)
+            {
+                var loc = item.location;
+                DiagnosticDescriptor dd = new("RSCG001", "Demeter violation", $"Demeter violation {item.nrDots} found in {item.text}", "Demeter", DiagnosticSeverity.Error, true);
+                Diagnostic diagnostic = Diagnostic.Create(dd, loc);
+                spc.ReportDiagnostic(diagnostic);
+            }
+
+        }
     }
 
-    private static string[] ExtractAllInsideParentheses(string input)
-    {
-        input = "(" + input + ")";
-        var matches = Regex.Matches(input, @"\(([^)]*)\)");
-        var results = new List<string>();
-        foreach (Match match in matches)
-        {
-            if (match.Success)
-            {
-                results.Add(match.Groups[0].Value);
-            }
-        }
-        return results.ToArray();
-    }
     private ITypeSymbol? ReturnType(SemanticModel semanticModel, InvocationExpressionSyntax invocation)
     {
         var methodSymbol = semanticModel.GetSymbolInfo(invocation).Symbol as IMethodSymbol;
