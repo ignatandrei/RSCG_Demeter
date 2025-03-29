@@ -8,7 +8,7 @@ Add the package RSCG_Demeter to the csproj
 
 ```xml
 	<ItemGroup>
-    <PackageReference Include="RSCG_Demeter" Version="2026.327.2212" OutputItemType="Analyzer" ReferenceOutputAssembly="false"  />
+    <PackageReference Include="RSCG_Demeter" Version="2026.328.706" OutputItemType="Analyzer" ReferenceOutputAssembly="false"  />
   </ItemGroup>
 ```
 
