@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSCG_Demeter", "RSCG_Demete
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSCG_Console", "RSCG_Console\RSCG_Console.csproj", "{9132FC5B-110D-4CAC-891B-CCCDC37E3D75}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSCGDemeter_Tests", "RSCGDemeter_Tests\RSCGDemeter_Tests.csproj", "{C0112CDB-C716-4908-A586-1E32DFCB4728}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{9132FC5B-110D-4CAC-891B-CCCDC37E3D75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9132FC5B-110D-4CAC-891B-CCCDC37E3D75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9132FC5B-110D-4CAC-891B-CCCDC37E3D75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0112CDB-C716-4908-A586-1E32DFCB4728}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0112CDB-C716-4908-A586-1E32DFCB4728}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0112CDB-C716-4908-A586-1E32DFCB4728}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0112CDB-C716-4908-A586-1E32DFCB4728}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
